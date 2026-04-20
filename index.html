@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mayuresh & Bhoomika Wedding</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Marcellus&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --light-gold: #f4e1a1;
+            --deep-red: #5d1010;
+            --bright-red: #8b0000;
+            --cream: #fffdf5;
+            --dark-bg: #1a0101;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #000;
+            font-family: 'Playfair Display', serif;
+            color: var(--cream);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .invitation-stack {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .invitation-stack::-webkit-scrollbar {
+            display: none;
+        }
+
+        .card {
+            flex-shrink: 0;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            scroll-snap-align: start;
+            padding: 40px 25px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-red {
+            background: radial-gradient(circle, var(--bright-red) 0%, var(--dark-bg) 100%);
+        }
+
+        .card-cream {
+            background: var(--cream);
+            color: var(--deep-red);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 2px solid var(--gold);
+            outline: 1px solid var(--gold);
+            outline-offset: -6px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .card-cream::before {
+            border-color: var(--deep-red);
+            outline-color: var(--deep-red);
+        }
+
+        .content-wrap {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .img-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 0;
+        }
+
+        .img-box img {
+            max-width: 90%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Side Banana Tree Scaling - Sticky to Wall */
+        .banana-side {
+            position: absolute;
+            height: 50%;
+            top: -10%;
+            z-index: 2;
+            opacity: 1;
+            pointer-events: none;
+            object-fit: contain;
+        }
+
+        .left-side {
+            left: 0;
+            transform: scaleX(-1);
+            object-position: left;
+        }
+
+       .right-side {
+    right: 0;
+    top: auto;        /* Cancels out the top: 10% from the main class */
+    bottom: 0;       /* Pins it to the bottom */
+    object-position: right bottom; /* Ensures the image sits in the bottom-right corner */
+}
+
+        .script-font {
+            font-family: 'Great Vibes', cursive;
+            color: var(--light-gold);
+            font-weight: normal;
+            flex-shrink: 0;
+        }
+
+        .card-cream .script-font {
+            color: var(--deep-red);
+        }
+
+        .shloka {
+            font-family: 'Marcellus', serif;
+            font-size: 1rem;
+            font-weight: bolder;
+            line-height: 1.4;
+            color: var(--light-gold);
+            flex-shrink: 0;
+            margin-top: 30px;
+            /* Pushed down from top */
+        }
+
+        .card-cream .shloka {
+            color: #8b6b23;
+        }
+
+        .names {
+            font-size: 2.6rem;
+            line-height: 1;
+            margin: 5px 0;
+            flex-shrink: 0;
+        }
+
+        .sub-text {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .divider {
+            border-top: 1px solid var(--gold);
+            border-bottom: 1px solid var(--gold);
+            padding: 5px 0;
+            width: 80%;
+            margin: 5px 0;
+            flex-shrink: 0;
+        }
+
+        /* Flower Frame Design for Last Two Sections */
+        .flower-frame {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        .flower-corner {
+            position: absolute;
+            width: 150px;
+            opacity: 0.9;
+        }
+
+        /* Flower Shower Animation */
+        .flower-shower {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .flower {
+            position: absolute;
+            top: -30px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .event-item {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .event-thumb {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+        }
+
+        @keyframes ganeshaSwing {
+            0% {
+                transform: rotate(5deg);
+            }
+
+            100% {
+                transform: rotate(-5deg);
+            }
+        }                                                         
+
+        /* Custom Fix for the Final Card */
+.compliments-fix {
+    justify-content: center !important; /* Centers content vertically */
+    padding-top: 20px;
+}
+
+.invite-card-box {
+    border: 1px solid var(--gold);
+    padding: 25px 20px;
+    border-radius: 12px;
+    width: 90%;
+    background: rgba(0, 0, 0, 0.5); /* Darker for better contrast */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    margin: 20px 0;
+}
+
+.host-name {
+    font-family: 'Marcellus', serif;
+    font-size: 1.4rem;
+    margin: 12px 0;
+    color: var(--cream);
+    letter-spacing: 1px;
+}
+
+.bottom-shloka {
+    opacity: 0.8;
+    font-size: 0.8rem;
+    margin-top: 20px;
+    color: var(--light-gold);
+}
+
+/* Perfect Corner Alignment */
+.corner-top-right {
+    top: 0; 
+    right: 0; 
+    transform: scaleX(-1); 
+    width: 140px; /* Adjust size for mobile */
+}
+
+.corner-bottom-left {
+    position: absolute;
+    bottom: 0; 
+    left: -10; 
+    /* The origin ensures the rotation happens exactly at the corner */
+    transform-origin: bottom left; 
+    transform: rotate(-90deg) translateY(100%); 
+    width: 140px;
+    z-index: 6;
+    pointer-events: none;
+}
+    </style>
+</head>
+
+<body>
+
+    <div class="invitation-stack">
+
+        <section class="card card-red">
+            <div class="flower-shower"></div>
+            <img src="banana.png" class="banana-side left-side">
+            <img src="banana.png" class="banana-side right-side">
+            
+            <div class="content-wrap">
+                <div class="shloka">वक्रतुंड महाकाय सूर्यकोटि समप्रभ।<br>निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा॥
+                </div>
+                <div class="img-box">
+                    <img src="ganesh.png" alt="Ganesha" style="animation: ganeshaSwing 3s ease-in-out infinite alternate; 
+                transform-origin: top center; 
+                display: block;">
+                </div>
+                <div class="divider">
+                    <h1 class="script-font" style="font-size: 2.8rem;">Lagnapatrika</h1>
+                    <div class="sub-text">The Wedding Invitation</div>
+                </div>
+                <p class="sub-text" style="font-size: 0.6rem;">SWIPE TO OPEN <i class="fas fa-arrow-right"></i></p>
+            </div>
+        </section>
+
+        <section class="card card-red">
+            <div class="flower-shower"></div>
+            <img src="dwar.png"
+                style="position: absolute; top:0; left:0; width:100%; height:80%; object-fit: cover; opacity: 1;">
+            <div class="content-wrap">
+                <div class="img-box">
+                    <img src="couple.png" alt="Couple">
+                </div>
+                <h1 class="names script-font">Mayuresh & Bhoomika</h1>
+                <div class="shloka" style="margin-top: 0;">A celebration of two souls becoming one.</div>
+            </div>
+        </section>
+
+        <section class="card card-cream">
+            <div class="flower-shower"></div>
+            <img src="banana.png" class="banana-side left-side">
+            <img src="banana.png" class="banana-side right-side">
+            <div class="flower-frame">
+                <img src="yellow.png" class="flower-corner"
+                    style="top:0; right:0; transform: scaleX(-1);">
+                <img src="yellow.png" class="flower-corner"
+                    style="bottom:0; left:0; transform: rotate(-90deg);">
+            </div>
+            <div class="content-wrap">
+                
+                <div style="margin-top: 45px;">
+    <p class="sub-text" style="font-size: 1rem; font-weight: 900; letter-spacing: 3px; text-transform: uppercase;">
+        Together with their families
+    </p>
+    
+    <p class="shloka" style="color: var(--bright-red); font-weight: 900; font-size: 1.2rem; margin-top: 25px; line-height: 1.2;">
+        Welcoming Bride Bhoomika
+    </p>
+</div>
+                <div class="img-box">
+                    <img src="dulhan.png" alt="Bride">
+                </div>
+                <div class="divider">
+                    <div class="sub-text">Thursday, 30th April 2026</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card card-cream">
+            <div class="flower-shower"></div>
+            <img src="banana.png" class="banana-side left-side">
+            <img src="banana.png" class="banana-side right-side">
+            <img src="yellow.png" class="flower-corner"
+                    style="top:0; left:0; transform: rotate(90deg);">
+            <div class="content-wrap">
+                <h2 class="script-font" style="font-size: 4rem;">Wedding Ceremonies</h2>
+                <div class="img-box" style="flex: 1;">
+                    <img src="hth.png" alt="Rituals">
+                </div>
+                <div class="event-item">
+                    <img src="haldi.jpg" class="event-thumb">
+                    <div style="text-align: left;">
+                        <div class="sub-text" style="color:#b35900;">Haldi Ceremony</div>
+                        <p style="font-size: 0.75rem;">29th April 2026 | 6:00 PM onwards</p>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <img src="subh.jpg" class="event-thumb">
+                    <div style="text-align: left;">
+                        <div class="sub-text" style="color:var(--bright-red);">Shubh Vivah</div>
+                        <p style="font-size: 0.85rem; font-weight: bold;">30th April 2026 | 12:35 PM</p>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <img src="recp.jpg" class="event-thumb">
+                    <div style="text-align: left;">
+                        <div class="sub-text" style="color:var(--deep-red);">Wedding Reception</div>
+                        <p style="font-size: 0.75rem;">30th April 2026 | 7:00 PM onwards</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card card-red">
+            <div class="flower-shower"></div>
+            <img src="banana.png" class="banana-side left-side">
+            <img src="banana.png" class="banana-side right-side">
+            <div class="flower-frame">
+        <img src="yellow.png" class="flower-corner corner-top-right">
+        <img src="yellow.png" class="flower-corner corner-bottom-left">
+    </div>
+            <div class="content-wrap">
+                <h2 class="sub-text">Venue Location</h2>
+                <div class="img-box">
+                    <img src="tutari.png" alt="Venue">
+                </div>
+                <div class="divider">
+                    <div class="script-font" style="font-size: 2.2rem;">Patil Thaguaai Resort</div>
+                    <p style="font-size: 0.85rem; margin-top: 5px;">Galwade Road, Amalner, Maharashtra</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card card-red">
+    <div class="flower-shower"></div>
+    
+    <div class="flower-frame">
+        <img src="yellow.png" class="flower-corner corner-top-right">
+        <img src="yellow.png" class="flower-corner corner-bottom-left">
+    </div>
+     <img src="banana.png" class="banana-side left-side">
+            <img src="banana.png" class="banana-side right-side">
+    <div class="content-wrap compliments-fix">
+        <div class="sub-text">With Best Compliments From</div>
+        <h1 class="script-font" style="font-size: 2.8rem; margin: 15px 0;">Chitale Family</h1>
+        
+        <div class="invite-card-box">
+            <p class="sub-text" style="font-size: 0.6rem; color: var(--gold); opacity: 0.8;">
+                Soliciting Your Gracious Presence
+            </p>
+            <p class="host-name">Dnyaneshwar Chitale</p>
+            <p class="phone-number"><i class="fas fa-phone-alt"></i> +91 98695 83963</p>
+        </div>
+
+        <div class="shloka bottom-shloka">॥ सदा सर्वदा योग तुझा घडावा ॥</div>
+    </div>
+</section>
+    </div>
+
+    <script>
+        function startFlowerShower() {
+            const containers = document.querySelectorAll('.flower-shower');
+            const icons = ['fa-leaf', 'fa-fan', 'fa-seedling', 'fa-certificate'];
+            const colors = ['#f4e1a1', '#ffffff', '#ffd700', '#ff69b4'];
+
+            containers.forEach(container => {
+                for (let i = 0; i < 40; i++) {
+                    const f = document.createElement('i');
+                    f.className = `fas ${icons[Math.floor(Math.random() * icons.length)]} flower`;
+                    f.style.left = Math.random() * 100 + '%';
+                    f.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    f.style.fontSize = (Math.random() * 15 + 8) + 'px';
+                    f.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                    f.style.animationDelay = Math.random() * 5 + 's';
+                    container.appendChild(f);
+                }
+            });
+        }
+        startFlowerShower();
+    </script>
+
+</body>
+
+</html>
