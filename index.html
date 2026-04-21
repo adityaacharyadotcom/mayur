@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
     <title>Mayuresh & Bhoomika Wedding</title>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Marcellus&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --gold: #d4af37;
@@ -35,9 +30,8 @@
             font-family: 'Playfair Display', serif;
             color: var(--cream);
             overflow: hidden;
-            /* FIXED: 100dvh prevents bottom content from hiding behind mobile URL bars */
-            height: 100dvh; 
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            height: 100dvh;
+            width: 100vw;
         }
 
         .invitation-stack {
@@ -48,8 +42,7 @@
             overflow-y: hidden;
             scroll-snap-type: x mandatory;
             scrollbar-width: none;
-            /* Extra smoothness for swiping */
-            -webkit-overflow-scrolling: touch; 
+            -webkit-overflow-scrolling: touch;
         }
 
         .invitation-stack::-webkit-scrollbar {
@@ -62,9 +55,8 @@
             height: 100dvh;
             position: relative;
             scroll-snap-align: start;
-            /* FIXED: Forces scroll to stop at 1 card per swipe */
-            scroll-snap-stop: always; 
-            padding: 40px 25px;
+            scroll-snap-stop: always;
+            padding: calc(35px + env(safe-area-inset-top)) 25px calc(35px + env(safe-area-inset-bottom)) 25px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -82,10 +74,10 @@
         .card::before {
             content: '';
             position: absolute;
-            top: 15px;
+            top: calc(15px + env(safe-area-inset-top));
             left: 15px;
             right: 15px;
-            bottom: 15px;
+            bottom: calc(15px + env(safe-area-inset-bottom));
             border: 2px solid var(--gold);
             outline: 1px solid var(--gold);
             outline-offset: -6px;
@@ -126,8 +118,8 @@
 
         .banana-side {
             position: absolute;
-            height: 50%;
-            top: -10%;
+            height: 48%;
+            top: -5%;
             z-index: 2;
             opacity: 1;
             pointer-events: none;
@@ -165,7 +157,7 @@
             line-height: 1.4;
             color: var(--light-gold);
             flex-shrink: 0;
-            margin-top: 30px;
+            margin-top: 25px;
         }
 
         .card-cream .shloka {
@@ -208,8 +200,22 @@
 
         .flower-corner {
             position: absolute;
-            width: 150px;
-            opacity: 0.9;
+            width: 110px;
+            opacity: 0.95;
+            pointer-events: none;
+        }
+
+        .corner-top-right {
+            top: calc(5px + env(safe-area-inset-top));
+            right: 5px;
+            transform: scaleX(-1);
+        }
+
+        .corner-bottom-left {
+            bottom: calc(5px + env(safe-area-inset-bottom));
+            left: -5px;
+            transform-origin: bottom left;
+            transform: rotate(-90deg) translateY(100%);
         }
 
         .flower-shower {
@@ -219,7 +225,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .flower {
@@ -232,7 +238,7 @@
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+            100% { transform: translateY(110dvh) rotate(360deg); opacity: 0; }
         }
 
         .event-item {
@@ -274,6 +280,7 @@
             background: rgba(0, 0, 0, 0.5);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             margin: 20px 0;
+            backdrop-filter: blur(5px);
         }
 
         .host-name {
@@ -291,23 +298,32 @@
             color: var(--light-gold);
         }
 
-        .corner-top-right {
-            top: 0;
-            right: 0;
-            transform: scaleX(-1);
-            width: 140px;
+        .anim-element {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
 
-        .corner-bottom-left {
-            position: absolute;
-            bottom: 0;
-            left: -10px;
-            transform-origin: bottom left;
-            transform: rotate(-90deg) translateY(100%);
-            width: 140px;
-            z-index: 6;
-            pointer-events: none;
+        .anim-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
+
+        .in-view .anim-element {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .in-view .anim-scale {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .d-1 { transition-delay: 0.1s; }
+        .d-2 { transition-delay: 0.3s; }
+        .d-3 { transition-delay: 0.5s; }
+        .d-4 { transition-delay: 0.7s; }
     </style>
 </head>
 
@@ -319,29 +335,34 @@
             <div class="flower-shower"></div>
             <img src="banana.png" class="banana-side left-side">
             <img src="banana.png" class="banana-side right-side">
+            
+            <div class="flower-frame">
+                <img src="sun.png" class="flower-corner corner-top-right anim-scale d-1">
+                <img src="white.png" class="flower-corner corner-bottom-left anim-scale d-1">
+            </div>
 
             <div class="content-wrap">
-                <div class="shloka">वक्रतुंड महाकाय सूर्यकोटि समप्रभ।<br>निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा॥</div>
-                <div class="img-box">
+                <div class="shloka anim-element d-1">वक्रतुंड महाकाय सूर्यकोटि समप्रभ।<br>निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा॥</div>
+                <div class="img-box anim-scale d-2">
                     <img src="ganesh.png" alt="Ganesha" style="animation: ganeshaSwing 3s ease-in-out infinite alternate; transform-origin: top center; display: block;">
                 </div>
-                <div class="divider">
+                <div class="divider anim-element d-3">
                     <h1 class="script-font" style="font-size: 2.8rem;">Lagnapatrika</h1>
                     <div class="sub-text">The Wedding Invitation</div>
                 </div>
-                <p class="sub-text" style="font-size: 0.6rem;">SWIPE TO OPEN <i class="fas fa-arrow-right"></i></p>
+                <p class="sub-text anim-element d-4" style="font-size: 0.6rem; animation: pulse 2s infinite;">SWIPE TO OPEN <i class="fas fa-arrow-right"></i></p>
             </div>
         </section>
 
         <section class="card card-red">
             <div class="flower-shower"></div>
-            <img src="dwar.png" style="position: absolute; top:0; left:0; width:100%; height:80%; object-fit: cover; opacity: 1;">
+            <img src="dwar.png" style="position: absolute; top:0; left:0; width:100%; height:80%; object-fit: cover; opacity: 1;" class="anim-element d-1">
             <div class="content-wrap">
-                <div class="img-box">
+                <div class="img-box anim-scale d-2">
                     <img src="couple.png" alt="Couple">
                 </div>
-                <h1 class="names script-font">Mayuresh & Bhoomika</h1>
-                <div class="shloka" style="margin-top: 0;">A celebration of two souls becoming one.</div>
+                <h1 class="names script-font anim-element d-3">Mayuresh & Bhoomika</h1>
+                <div class="shloka anim-element d-4" style="margin-top: 0;">A celebration of two souls becoming one.</div>
             </div>
         </section>
 
@@ -350,19 +371,18 @@
             <img src="banana.png" class="banana-side left-side">
             <img src="banana.png" class="banana-side right-side">
             <div class="flower-frame">
-                <img src="yellow.png" class="flower-corner" style="top:0; right:0; transform: scaleX(-1);">
-                <img src="yellow.png" class="flower-corner" style="bottom:0; left:0; transform: rotate(-90deg);">
+                <img src="sun.png" class="flower-corner corner-top-right anim-scale d-1">
+                <img src="white.png" class="flower-corner corner-bottom-left anim-scale d-1">
             </div>
             <div class="content-wrap">
-
-                <div style="margin-top: 45px;">
+                <div style="margin-top: 45px;" class="anim-element d-2">
                     <p class="sub-text" style="font-size: 1rem; font-weight: 900; letter-spacing: 3px; text-transform: uppercase;">Together with their families</p>
                     <p class="shloka" style="color: var(--bright-red); font-weight: 900; font-size: 1.2rem; margin-top: 25px; line-height: 1.2;">Welcoming Bride Bhoomika</p>
                 </div>
-                <div class="img-box">
+                <div class="img-box anim-scale d-3">
                     <img src="dulhan.png" alt="Bride">
                 </div>
-                <div class="divider">
+                <div class="divider anim-element d-4">
                     <div class="sub-text">Thursday, 30th April 2026</div>
                 </div>
             </div>
@@ -372,27 +392,30 @@
             <div class="flower-shower"></div>
             <img src="banana.png" class="banana-side left-side">
             <img src="banana.png" class="banana-side right-side">
-            <img src="yellow.png" class="flower-corner" style="top:0; left:0; transform: rotate(90deg);">
+            <div class="flower-frame">
+                <img src="sun.png" class="flower-corner corner-top-right anim-scale d-1">
+                <img src="white.png" class="flower-corner corner-bottom-left anim-scale d-1">
+            </div>
             <div class="content-wrap">
-                <h2 class="script-font" style="font-size: 4rem;">Wedding Ceremonies</h2>
-                <div class="img-box" style="flex: 1;">
+                <h2 class="script-font anim-element d-1" style="font-size: 4rem;">Wedding Ceremonies</h2>
+                <div class="img-box anim-scale d-2" style="flex: 1;">
                     <img src="hth.png" alt="Rituals">
                 </div>
-                <div class="event-item">
+                <div class="event-item anim-element d-2">
                     <img src="haldi.jpg" class="event-thumb">
                     <div style="text-align: left;">
                         <div class="sub-text" style="color:#b35900;">Haldi Ceremony</div>
                         <p style="font-size: 0.75rem;">29th April 2026 | 6:00 PM onwards</p>
                     </div>
                 </div>
-                <div class="event-item">
+                <div class="event-item anim-element d-3">
                     <img src="subh.jpg" class="event-thumb">
                     <div style="text-align: left;">
                         <div class="sub-text" style="color:var(--bright-red);">Shubh Vivah</div>
                         <p style="font-size: 0.85rem; font-weight: bold;">30th April 2026 | 12:35 PM</p>
                     </div>
                 </div>
-                <div class="event-item">
+                <div class="event-item anim-element d-4">
                     <img src="recp.jpg" class="event-thumb">
                     <div style="text-align: left;">
                         <div class="sub-text" style="color:var(--deep-red);">Wedding Reception</div>
@@ -407,15 +430,15 @@
             <img src="banana.png" class="banana-side left-side">
             <img src="banana.png" class="banana-side right-side">
             <div class="flower-frame">
-                <img src="yellow.png" class="flower-corner corner-top-right">
-                <img src="yellow.png" class="flower-corner corner-bottom-left">
+                <img src="sun.png" class="flower-corner corner-top-right anim-scale d-1">
+                <img src="white.png" class="flower-corner corner-bottom-left anim-scale d-1">
             </div>
             <div class="content-wrap">
-                <h2 class="sub-text">Venue Location</h2>
-                <div class="img-box">
+                <h2 class="sub-text anim-element d-2">Venue Location</h2>
+                <div class="img-box anim-scale d-3">
                     <img src="tutari.png" alt="Venue">
                 </div>
-                <div class="divider">
+                <div class="divider anim-element d-4">
                     <div class="script-font" style="font-size: 2.2rem;">Patil Thaguaai Resort</div>
                     <p style="font-size: 0.85rem; margin-top: 5px;">Galwade Road, Amalner, Maharashtra</p>
                 </div>
@@ -425,25 +448,33 @@
         <section class="card card-red">
             <div class="flower-shower"></div>
             <div class="flower-frame">
-                <img src="yellow.png" class="flower-corner corner-top-right">
-                <img src="yellow.png" class="flower-corner corner-bottom-left">
+                <img src="sun.png" class="flower-corner corner-top-right anim-scale d-1">
+                <img src="white.png" class="flower-corner corner-bottom-left anim-scale d-1">
             </div>
             <img src="banana.png" class="banana-side left-side">
             <img src="banana.png" class="banana-side right-side">
             <div class="content-wrap compliments-fix">
-                <div class="sub-text">With Best Compliments From</div>
-                <h1 class="script-font" style="font-size: 2.8rem; margin: 15px 0;">Chitale Family</h1>
+                <div class="sub-text anim-element d-1">With Best Compliments From</div>
+                <h1 class="script-font anim-element d-2" style="font-size: 2.8rem; margin: 15px 0;">Chitale Family</h1>
 
-                <div class="invite-card-box">
+                <div class="invite-card-box anim-scale d-3">
                     <p class="sub-text" style="font-size: 0.6rem; color: var(--gold); opacity: 0.8;">Soliciting Your Gracious Presence</p>
                     <p class="host-name">Dnyaneshwar Chitale</p>
                     <p class="phone-number"><i class="fas fa-phone-alt"></i> +91 98695 83963</p>
                 </div>
 
-                <div class="shloka bottom-shloka">॥ सदा सर्वदा योग तुझा घडावा ॥</div>
+                <div class="shloka bottom-shloka anim-element d-4">॥ सदा सर्वदा योग तुझा घडावा ॥</div>
             </div>
         </section>
     </div>
+
+    <style>
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+    </style>
 
     <script>
         function startFlowerShower() {
@@ -465,25 +496,33 @@
             });
         }
         startFlowerShower();
-    </script>
-    
-    <script>
-        // FIXED: Continuous Full Screen Listener. 
-        // If the user exits full screen, any new tap will trigger it again.
+
         document.addEventListener('click', function () {
-            // Check if we are ALREADY in full screen so it doesn't glitch
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                 var el = document.documentElement;
                 var rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
 
                 if (typeof rfs != "undefined" && rfs) {
                     rfs.call(el).catch(err => {
-                        console.log("Waiting for user tap to allow fullscreen...");
+                        console.log("Fullscreen request deferred.");
                     });
                 }
             }
-        }); 
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                } else {
+                    entry.target.classList.remove('in-view');
+                }
+            });
+        }, { threshold: 0.4 });
+
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
     </script>
 </body>
-
 </html>
